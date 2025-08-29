@@ -22,7 +22,7 @@
         $inspect(tree.nodes()).with(console.log);
     });
 
-    let nodes = $derived(tree.nodes().filter((n) => n.window !== undefined));
+    let windows = $derived(tree.windows());
 
     type Keybind = { ctrl: Function; shift?: Function };
     const keybinds: { [key: string]: Keybind } = $derived({
@@ -33,8 +33,7 @@
         q: { ctrl: tree.remove.bind(tree) },
         enter: {
             ctrl: () => {
-                const id = crypto.randomUUID();
-                tree.addWindow({ title: id, id });
+                tree.addWindow({ title: "Terminal" });
             },
         },
     });
@@ -60,7 +59,7 @@
 <Navbar />
 
 <main class="screen" style={`left: ${sideMargin}px;  max-width: ${width}px; max-height: ${height}px`}>
-    <WindowTree bind:nodes bind:tree />
+    <WindowTree bind:windows bind:tree />
 </main>
 
 <style lang="scss">

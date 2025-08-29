@@ -1,12 +1,12 @@
 export type Window = {
     id: string;
     title: string;
+    rect: Rect;
 };
 
 export type WindowData = {
-    data: Window;
-    rect: Rect;
-    node: BspNode;
+    id: string;
+    title: string;
 };
 
 export type Rect = {
@@ -22,15 +22,15 @@ export type BspNode = {
     splitRatio: number;
     rect: Rect;
     nodeId: string;
-    window?: Window;
+    window?: WindowData;
     parent: BspNode | null;
 
     flat: () => BspNode[];
 
-    windows: () => WindowData[];
+    windows: () => Window[];
     shortest: () => BspNode;
 
-    insert: (window: Window, idx: number, ratio: number) => BspNode;
+    insert: (window: WindowData, idx: number, ratio: number) => BspNode;
     remove: (childNodeId: string) => BspNode;
     distribute: () => [number, number];
     calcGeom: (rect: Rect) => void;
@@ -54,7 +54,7 @@ export function newBspNode(parent: BspNode | null = null): BspNode {
         },
 
         windows() {
-            if (this.window) return [{ data: this.window, rect: this.rect, node: this }];
+            if (this.window) return [{ ...this.window, rect: this.rect }];
 
             return this.children.map((c) => c.windows()).flat();
         },
@@ -67,7 +67,7 @@ export function newBspNode(parent: BspNode | null = null): BspNode {
             return this.children[1].shortest();
         },
 
-        insert(window: Window, idx: number, ratio: number): BspNode {
+        insert(window: WindowData, idx: number, ratio: number): BspNode {
             if (!this.window) {
                 this.window = window;
                 return this;

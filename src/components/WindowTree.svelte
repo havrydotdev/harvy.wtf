@@ -1,22 +1,24 @@
 <script lang="ts">
-    import type { BspNode, BspTree } from "../bsp";
+    import { flip } from "svelte/animate";
+    import type { BspTree, Window } from "../bsp";
 
-    let { nodes = $bindable(), tree = $bindable() }: { nodes: BspNode[]; tree: BspTree } = $props();
+    let { windows = $bindable(), tree = $bindable() }: { windows: Window[]; tree: BspTree } = $props();
 
     const text =
         "                   -`                     harvy.wtf@web\r\n                  .o+`                    ----------------\r\n                 `ooo/                    OS: Arch linux x86_64\r\n                `+oooo:                   Model: ASUS TUF Gaming F15 FX506HC_FX506HC 1.0\r\n               `+oooooo:                  Kernel: web-0.0.1\r\n               -+oooooo+:                 Uptime: 7 hours, 49 mins\r\n             `/:-:++oooo+:                Packages: 0 (npm)\r\n            `/++++/+++++++:               Shell: web-shell 0.0.1\r\n           `/++++++++++++++:              Resolution: 1920x1080\r\n          `/+++ooooooooooooo/`            DE: WebDE\r\n         ./ooosssso++osssssso+`           WM: WebTiling\r\n        .oossssso-````/ossssss+`          Theme: Dark [GTK2/3]\r\n       -osssssso.      :ssssssso.         Icons: default [GTK2/3]\r\n      :osssssss/        osssso+++.        Terminal: qterminal\r\n     /ossssssss/        +ssssooo/-        Terminal Font: Source Code Pro 12\r\n   `/ossssso+/:-        -:/+osssso+-      CPU: 11th Gen Intel 15-11400H (12) @ 4.500GHz\r\n  `+sso+:-`                 `.-/+oso:     GPU: NVIDIA GeForce RTX 3050 Mobile\r\n `++:.                           `-/+/    Memory: 8546 / 15731MiB\r\n .`                                 ` \r\n                                         \u2B1B\uD83D\uDFE5\uD83D\uDFE9\uD83D\uDFEB\uD83D\uDFE6\uD83D\uDFEA\uD83D\uDFE6\u2B1B\r\n                                         \uD83D\uDFE9\uD83D\uDFE5\uD83D\uDFE9\uD83D\uDFE8\uD83D\uDFE6\uD83D\uDFEA\uD83D\uDFE6\u2B1C";
 </script>
 
-{#if nodes.length != 0}
-    {#each nodes as node (node.nodeId)}
-        {@const isActive = node.nodeId == tree.current.nodeId}
-        {@const rect = node.rect}
+{#if windows.length != 0}
+    {#each windows as window (window.id)}
+        {@const isActive = window.id == tree.current.window?.id}
+        {@const rect = window.rect}
 
         <!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
         <div
+            animate:flip={{ duration: 250 }}
             class={`container ${isActive ? "active" : ""}`}
             style={`top: ${rect.y}px; left: ${rect.x}px; height: ${rect.h}px; width: ${rect.w}px`}
-            onclick={() => (tree.current = node)}
+            onclick={() => (tree.current = tree.nodes().filter((n) => n.window?.id == window.id)[0])}
         >
             <div class="webfetch">
                 <pre>{text}</pre>
