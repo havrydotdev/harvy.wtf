@@ -18,11 +18,9 @@
         tree.setRect({ x: 0, y: 0, h: height, w: width });
     });
 
-    $effect(() => {
-        $inspect(tree.nodes()).with(console.log);
-    });
-
+    let terminalCounter = $state(0);
     let windows = $derived(tree.windows());
+    let current = $derived(tree.current);
 
     type Keybind = { ctrl: Function; shift?: Function };
     const keybinds: { [key: string]: Keybind } = $derived({
@@ -32,9 +30,7 @@
         l: { ctrl: tree.right.bind(tree), shift: tree.shuffleRight.bind(tree) },
         q: { ctrl: tree.remove.bind(tree) },
         enter: {
-            ctrl: () => {
-                tree.addWindow({ title: "Terminal" });
-            },
+            ctrl: () => tree.addWindow({ title: `Terminal ${(terminalCounter += 1)}` }),
         },
     });
 
@@ -56,7 +52,7 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<Navbar />
+<Navbar title={current.window?.title ?? ""} />
 
 <main class="screen" style={`left: ${sideMargin}px;  max-width: ${width}px; max-height: ${height}px`}>
     <WindowTree bind:windows bind:tree />

@@ -1,10 +1,31 @@
-<script>
+<script lang="ts">
     import Arch from "../icons/Arch.svelte";
+
+    let { title }: { title: string } = $props();
+    let date = $state(new Date());
+
+    $effect(() => {
+        const interval = setInterval(() => {
+            date = new Date();
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    });
 </script>
 
 <nav>
-    <Arch />
-    <span>{new Date().toLocaleTimeString()}</span>
+    <div>
+        <Arch />
+        <span>{title}</span>
+    </div>
+    <span
+        >{new Intl.DateTimeFormat("en-GB", {
+            dateStyle: "short",
+            timeStyle: "short",
+        }).format(date)}</span
+    >
 </nav>
 
 <style lang="scss">

@@ -5,7 +5,7 @@ RUN bun i
 COPY . .
 RUN bun run build
 
-FROM busybox:1.37 AS runner
+FROM ghcr.io/havrydotdev/slimserve 
 WORKDIR /app
-COPY --from=builder /app/prod .
-CMD ["busybox", "httpd", "-f", "-v", "-p", "3001"]
+COPY --from=builder /app/dist .
+CMD ["slimserve", "-p", "3001", "-e", "brotli"]

@@ -15,7 +15,7 @@
 
         <!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
         <div
-            animate:flip={{ duration: 250 }}
+            animate:flip={{ duration: 300 }}
             class={`container ${isActive ? "active" : ""}`}
             style={`top: ${rect.y}px; left: ${rect.x}px; height: ${rect.h}px; width: ${rect.w}px`}
             onclick={() => (tree.current = tree.nodes().filter((n) => n.window?.id == window.id)[0])}
